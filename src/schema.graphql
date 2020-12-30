@@ -1,8 +1,6 @@
 ############################################################################
 #                                 DIRECTIVES
 ############################################################################
-# directive @hasRole(roles: [UserRole!]) on FIELD_DEFINITION | OBJECT
-
 directive @constraint(
     # String constraints
     minLength: Int
@@ -23,29 +21,14 @@ directive @constraint(
     uniqueTypeName: String
   ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
-  ############################################################################
+############################################################################
 #                                   USER
 ############################################################################
 
-enum UserRole {
-  ADMIN
-  USER
-  SUPER_USER
-}
-
-enum Gender {
-  UNKNOWN
-  MALE
-  FEMALE
-  OTHER
-}
-
 type User {
-  # createdAt: DateTime
-  # updatedAt: DateTime
   userId: ID! @id
 
   userRole: String!
   username: String! @constraint(minLength: 6, maxLength: 30)
-  password: String! @constraint(minLength: 6, maxLength: 30)
+  email: String! @constraint(minLength: 5, format: "email")
 }

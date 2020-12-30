@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server-express'
 import dotenv from 'dotenv'
 import express from 'express'
-import { assertSchema, GraphQLSchema } from 'graphql'
+import { GraphQLSchema } from 'graphql'
 import { constraintDirective } from 'graphql-constraint-directive'
 import neo4j from 'neo4j-driver'
 import { makeAugmentedSchema } from 'neo4j-graphql-js'
@@ -16,29 +16,18 @@ const main = async() => {
 
     let schema: GraphQLSchema = await makeAugmentedSchema({
         typeDefs: typeDefs,
-        schemaTransforms: [constraintDirective()],
-        config: {
-            query: false, //default
-            mutation: false,
-            auth: false,
-            debug: true
-        }
+        schemaTransforms: [constraintDirective()]
     })
 
     console.log(schema) // errors?
-    
     console.log("process.env.NEO4J_URI", process.env.NEO4J_URI)
+    
     const driver = neo4j.driver(
         process.env.NEO4J_URI || 'bolt://localhost:7687',
         neo4j.auth.basic(
           process.env.NEO4J_USER || 'neo4j',
           process.env.NEO4J_PASSWORD || 'neo4j'
         )
-        /*,
-        {
-          encrypted: process.env.NEO4J_ENCRYPTED ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF',
-        }
-        */
     )
 
     const formatError = function(error) {
@@ -49,7 +38,7 @@ const main = async() => {
         return error
     }
 
-    assertSchema({ schema, driver, debug: true, dropExisting: true });
+    // assertSchema({ schema, driver, debug: true, dropExisting: true });
 
     const apolloServer = new ApolloServer({
         schema: schema,
