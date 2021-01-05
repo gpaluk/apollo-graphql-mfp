@@ -29,6 +29,6 @@ type User {
   userId: ID! @id
 
   userRole: String!
-  username: String! @constraint(minLength: 6, maxLength: 30)
+  username: String! @constraint(minLength: 6, maxLength: 30) @unique
   email: String! @constraint(minLength: 5, format: "email")
 }
